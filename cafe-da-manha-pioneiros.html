@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Café da Manhã 🌸</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+  :root {
+    --bg:#fff5f8;--card:#ffffff;--pink:#e8487a;--green:#3cb87a;
+    --green-light:#e8f7f0;--text:#2d2d2d;--muted:#b0b0b0;
+    --border:#f0e0e6;--shadow:0 2px 14px rgba(232,72,122,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px 14px 60px}
+  header{text-align:center;margin-bottom:24px}
+  .emoji{font-size:2.2rem}
+  h1{font-size:1.45rem;font-weight:800;color:var(--pink);margin-top:4px}
+  header p{font-size:0.8rem;color:var(--muted);margin-top:5px;line-height:1.5}
+  .sync{display:inline-flex;align-items:center;gap:5px;font-size:0.72rem;margin-top:8px;padding:4px 10px;border-radius:20px;background:#f0f0f0;color:var(--muted)}
+  .sync.ok{background:var(--green-light);color:var(--green)}
+  .sync.err{background:#ffeaea;color:#e04040}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+  .dot.spin{animation:blink 1.2s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+  .prog-wrap{margin:14px auto 0;max-width:340px}
+  .prog-bg{background:#f0dde5;border-radius:20px;height:9px;overflow:hidden}
+  .prog-fill{height:100%;background:linear-gradient(90deg,var(--pink),#f47aaa);border-radius:20px;transition:width .4s;width:0%}
+  .prog-label{text-align:center;font-size:.75rem;color:var(--muted);margin-top:5px}
+  .section{margin-bottom:18px}
+  .sec-title{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--pink);padding:0 4px;margin-bottom:8px}
+  .card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;border:1.5px solid #fce8ef}
+  .item{padding:14px 14px 12px;border-bottom:1px solid var(--border)}
+  .item:last-child{border-bottom:none}
+  .ihead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+  .iname{font-size:.95rem;font-weight:800;flex:1}
+  .iobs{font-size:.7rem;font-weight:600;color:#c0a0ae}
+  .imeta{text-align:right;flex-shrink:0}
+  .mgoal{font-size:.7rem;color:var(--muted)}
+  .msum{font-size:.9rem;font-weight:800}
+  .msum.ok{color:var(--green)}
+  .msum.nok{color:var(--pink)}
+  .bar-bg{background:#f5e5eb;border-radius:20px;height:7px;overflow:hidden;margin-bottom:10px}
+  .bar-fill{height:100%;border-radius:20px;transition:width .4s;background:linear-gradient(90deg,var(--pink),#f47aaa)}
+  .bar-fill.ok{background:linear-gradient(90deg,var(--green),#56d48a)}
+  .clist{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+  .crow{display:flex;align-items:center;gap:6px;background:#fff8fa;border:1.5px solid #f0dde5;border-radius:10px;padding:6px 10px}
+  .cnome{flex:1;font-size:.82rem;font-weight:700;color:var(--green)}
+  .cqtd{font-size:.8rem;font-weight:700;background:#e8f7f0;padding:2px 8px;border-radius:20px;white-space:nowrap}
+  .dbtn{background:none;border:none;font-size:.95rem;cursor:pointer;color:#ddb0be;padding:0 2px;line-height:1;flex-shrink:0}
+  .dbtn:active{color:var(--pink)}
+  .aform{display:flex;gap:6px;align-items:center}
+  .aform input[type=text]{flex:2;border:1.5px solid #f0dde5;border-radius:10px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:600;color:var(--text);background:#fff8fa;outline:none;min-width:0}
+  .aform input[type=text]:focus{border-color:var(--pink);background:white}
+  .aform input[type=text]::placeholder{color:#d8aab8;font-weight:400}
+  .aform input[type=number]{flex:1;border:1.5px solid #f0dde5;border-radius:10px;padding:8px;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;color:var(--text);background:#fff8fa;outline:none;min-width:0;-moz-appearance:textfield}
+  .aform input[type=number]::-webkit-inner-spin-button,.aform input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+  .aform input[type=number]:focus{border-color:var(--pink);background:white}
+  .aform input[type=number]::placeholder{color:#d8aab8;font-weight:400}
+  .abtn{width:34px;height:34px;border-radius:10px;border:none;background:var(--pink);color:white;font-size:1.3rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s}
+  .abtn:active{opacity:.75}
+  .cbadge{display:none;font-size:.72rem;font-weight:800;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:20px;margin-top:6px;text-align:center}
+  .item.completo .cbadge{display:block}
+  .rwrap{margin-top:28px}
+  .rtitle{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--pink);margin-bottom:8px;padding:0 4px}
+  .rcard{background:white;border-radius:18px;box-shadow:var(--shadow);border:1.5px solid #fce8ef;padding:16px;font-size:.82rem;line-height:1.9;white-space:pre-wrap;color:var(--text);min-height:60px}
+  .rempty{color:var(--muted);font-style:italic;font-size:.82rem}
+  .bcopy{display:block;width:100%;margin-top:10px;padding:14px;background:var(--pink);border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;color:white;cursor:pointer;transition:opacity .2s}
+  .bcopy:active{opacity:.8}
+  .breset{display:block;width:100%;margin-top:10px;padding:12px;background:white;border:2px solid #f0dde5;border-radius:14px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:var(--muted);cursor:pointer}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#2d2d2d;color:white;padding:12px 22px;border-radius:30px;font-size:.85rem;font-weight:700;transition:transform .35s;z-index:999;white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .overlay{position:fixed;inset:0;background:rgba(255,245,248,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:12px}
+  .overlay p{font-size:.9rem;font-weight:700;color:var(--pink)}
+  .spinner{width:36px;height:36px;border:3px solid #f0dde5;border-top-color:var(--pink);border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .err-inp{border-color:var(--pink)!important}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="spinner"></div>
+  <p>Carregando lista...</p>
+</div>
+
+<header>
+  <div class="emoji">☕🌸</div>
+  <h1>Café da Manhã</h1>
+  <p>Digite seu nome e quanto vai levar.<br>Várias pessoas podem contribuir com o mesmo item!</p>
+  <div>
+    <span class="sync" id="sync">
+      <span class="dot spin"></span>
+      <span id="syncTxt">Conectando...</span>
+    </span>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="progBar"></div></div>
+    <div class="prog-label" id="progLabel">0 de 0 itens completos</div>
+  </div>
+</header>
+
+<div id="lista"></div>
+
+<div class="rwrap">
+  <div class="rtitle">📋 Resumo para o grupo</div>
+  <div class="rcard" id="rcard"><span class="rempty">Ainda nenhum item preenchido...</span></div>
+  <button class="bcopy" onclick="copiar()">📲 Copiar para o WhatsApp</button>
+  <button class="breset" onclick="resetar()">🔄 Resetar tudo</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+// Firebase config
+firebase.initializeApp({
+  apiKey: "AIzaSyBiHAab8OHE-v0xTgojYhIyr6pXDbplj-I",
+  authDomain: "cafedamanhapioneiros.firebaseapp.com",
+  databaseURL: "https://cafedamanhapioneiros-default-rtdb.firebaseio.com",
+  projectId: "cafedamanhapioneiros",
+  storageBucket: "cafedamanhapioneiros.firebasestorage.app",
+  messagingSenderId: "910537647537",
+  appId: "1:910537647537:web:75ff0e6e0710e95c750990"
+});
+
+const db = firebase.database();
+const ref = db.ref('cafe');
+
+const dados = [
+  {s:"🍞 Padaria",i:[
+    {id:"pao",      n:"Pão francês",          m:70, u:"un"},
+    {id:"salgado",  n:"Mini salgados",         m:85, u:"un"},
+    {id:"bolo",     n:"Bolo simples (fatias)", m:70, u:"fatias"},
+    {id:"biscoito", n:"Biscoito / Rosquinha",  m:1,  u:"kg"},
+  ]},
+  {s:"🧀 Frios",i:[
+    {id:"presunto",  n:"Presunto",  m:2, u:"kg"},
+    {id:"mussarela", n:"Mussarela", m:2, u:"kg"},
+  ]},
+  {s:"🧈 Acompanhamentos",i:[
+    {id:"manteiga",  n:"Manteiga / Margarina", m:1, u:"kg"},
+    {id:"requeijao", n:"Requeijão",            m:1, u:"kg"},
+  ]},
+  {s:"☕ Bebidas",i:[
+    {id:"cafe",  n:"Café pronto", m:5, u:"L", obs:"2L sem açúcar"},
+    {id:"leite", n:"Leite",       m:2, u:"L"},
+    {id:"suco",  n:"Suco",        m:7, u:"L"},
+  ]},
+  {s:"🍓 Salada de Frutas",i:[
+    {id:"banana",  n:"Banana",  m:20, u:"un"},
+    {id:"maca",    n:"Maçã",    m:15, u:"un"},
+    {id:"mamao",   n:"Mamão",   m:5,  u:"un"},
+    {id:"melao",   n:"Melão",   m:2,  u:"un"},
+    {id:"laranja", n:"Laranja", m:8,  u:"un"},
+  ]},
+];
+
+let estado = {};
+
+const soma = id => Object.values(estado[id]||{}).reduce((s,c)=>s+Number(c.qtd),0);
+
+function setSync(tipo, txt) {
+  const el = document.getElementById('sync');
+  const dot = el.querySelector('.dot');
+  el.className = 'sync'+(tipo==='ok'?' ok':tipo==='err'?' err':'');
+  dot.className = 'dot'+(tipo==='sync'?' spin':'');
+  document.getElementById('syncTxt').textContent = txt;
+}
+
+// escuta mudanças em tempo real — atualiza para todos automaticamente
+ref.on('value', snap => {
+  estado = snap.val() || {};
+  document.getElementById('overlay').style.display = 'none';
+  setSync('ok', 'Ao vivo ✓');
+  render();
+}, err => {
+  setSync('err', 'Sem conexão');
+  document.getElementById('overlay').style.display = 'none';
+  render();
+});
+
+function render() {
+  const container = document.getElementById('lista');
+  container.innerHTML = '';
+
+  dados.forEach(sec => {
+    const sdiv = document.createElement('div'); sdiv.className = 'section';
+    const stitle = document.createElement('div'); stitle.className = 'sec-title'; stitle.textContent = sec.s;
+    sdiv.appendChild(stitle);
+    const card = document.createElement('div'); card.className = 'card';
+
+    sec.i.forEach(item => {
+      const contribs = estado[item.id] ? Object.entries(estado[item.id]) : [];
+      const s = soma(item.id);
+      const pct = Math.min(100, (s / item.m) * 100);
+      const ok = s >= item.m;
+      const step = (item.u==='kg'||item.u==='L') ? '0.5' : '1';
+
+      const div = document.createElement('div');
+      div.className = 'item' + (ok ? ' completo' : '');
+
+      const clistHTML = contribs.length ? `<div class="clist">${
+        contribs.map(([key, c]) => `
+          <div class="crow">
+            <span class="cnome">👤 ${c.nome}</span>
+            <span class="cqtd">${c.qtd} ${item.u}</span>
+            <button class="dbtn" data-id="${item.id}" data-key="${key}">✕</button>
+          </div>`).join('')
+      }</div>` : '';
+
+      div.innerHTML = `
+        <div class="ihead">
+          <div>
+            <div class="iname">${item.n}</div>
+            ${item.obs ? `<div class="iobs">${item.obs}</div>` : ''}
+          </div>
+          <div class="imeta">
+            <div class="mgoal">Meta: ${item.m} ${item.u}</div>
+            <div class="msum ${ok?'ok':'nok'}">${s} / ${item.m}</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill ${ok?'ok':''}" style="width:${pct}%"></div></div>
+        ${clistHTML}
+        <div class="aform">
+          <input type="text"   placeholder="Seu nome"   data-id="${item.id}" data-t="n"/>
+          <input type="number" placeholder="${item.u}" min="0.1" step="${step}" data-id="${item.id}" data-t="q"/>
+          <button class="abtn" data-id="${item.id}">+</button>
+        </div>
+        <div class="cbadge">✅ Item completo!</div>`;
+
+      card.appendChild(div);
+    });
+
+    sdiv.appendChild(card);
+    container.appendChild(sdiv);
+  });
+
+  // eventos adicionar
+  document.querySelectorAll('.abtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const ni = document.querySelector(`input[data-id="${id}"][data-t="n"]`);
+      const qi = document.querySelector(`input[data-id="${id}"][data-t="q"]`);
+      const nome = ni.value.trim();
+      const qtd  = parseFloat(qi.value);
+      let ok = true;
+      if (!nome) { ni.classList.add('err-inp'); ok = false; } else ni.classList.remove('err-inp');
+      if (!qtd || qtd <= 0) { qi.classList.add('err-inp'); ok = false; } else qi.classList.remove('err-inp');
+      if (!ok) return;
+
+      setSync('sync', 'Salvando...');
+      ref.child(id).push({ nome, qtd });
+      ni.value = ''; qi.value = '';
+    });
+  });
+
+  // eventos deletar
+  document.querySelectorAll('.dbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setSync('sync', 'Salvando...');
+      ref.child(btn.dataset.id).child(btn.dataset.key).remove();
+    });
+  });
+
+  // enter
+  document.querySelectorAll('.aform input').forEach(inp => {
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.querySelector(`.abtn[data-id="${inp.dataset.id}"]`).click();
+    });
+  });
+
+  progresso();
+  resumo();
+}
+
+function progresso() {
+  let tot = 0, ok = 0;
+  dados.forEach(s => s.i.forEach(item => { tot++; if (soma(item.id) >= item.m) ok++; }));
+  document.getElementById('progBar').style.width = (tot ? (ok/tot)*100 : 0) + '%';
+  document.getElementById('progLabel').textContent = `${ok} de ${tot} itens completos`;
+}
+
+function resumo() {
+  const card = document.getElementById('rcard');
+  let linhas = [];
+  dados.forEach(sec => {
+    let sl = [];
+    sec.i.forEach(item => {
+      const contribs = estado[item.id] ? Object.values(estado[item.id]) : [];
+      if (!contribs.length) return;
+      const s = soma(item.id);
+      sl.push(`${s>=item.m?'✅':'⬜'} *${item.n}* — ${s}/${item.m} ${item.u}`);
+      contribs.forEach(c => sl.push(`   👤 ${c.nome}: ${c.qtd} ${item.u}`));
+    });
+    if (sl.length) { linhas.push(sec.s); linhas.push(...sl); linhas.push(''); }
+  });
+  if (!linhas.length) card.innerHTML = '<span class="rempty">Ainda nenhum item preenchido...</span>';
+  else card.textContent = linhas.join('\n');
+}
+
+function copiar() {
+  const txt = document.getElementById('rcard').innerText;
+  if (!txt || txt.includes('Ainda')) return;
+  const full = '☕🌸 *CAFÉ DA MANHÃ — Quem leva o quê*\n\n' + txt;
+  navigator.clipboard.writeText(full)
+    .then(() => toast('Copiado! Cole no WhatsApp 🎉'))
+    .catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = full; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      toast('Copiado! Cole no WhatsApp 🎉');
+    });
+}
+
+function resetar() {
+  if (!confirm('Resetar tudo? Apaga os dados de todas as pessoas.')) return;
+  setSync('sync', 'Salvando...');
+  ref.remove();
+  toast('Lista resetada! 🔄');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
